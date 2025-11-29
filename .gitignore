@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Django database
+db.sqlite3
+
+# Static files
+staticfiles/
+
+# YOLO / ML files (VERY LARGE)
+yolov8_model/
+yolov8n.pt
+runs/
+
+# Logs & temp
+*.log
+*.tmp
+
+# Node
+node_modules/
+
+# Environment secrets
+.env

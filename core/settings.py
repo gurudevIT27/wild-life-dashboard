@@ -1,25 +1,39 @@
 import os
 from pathlib import Path
 
+# --------------------------------------------------
+# BASE DIR
+# --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------ SECURITY ------------------
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-secret-key-change-this")
 
-# For local development you can use True
-DEBUG = True
+# --------------------------------------------------
+# SECURITY
+# --------------------------------------------------
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "unsafe-secret-key-change-this-for-production"
+)
+
+# DEBUG from environment for live hosting
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    ".onrender.com",   # ✅ for Render live hosting
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1",
     "http://localhost",
+    "https://*.onrender.com",
 ]
 
-# ------------------ APPS ------------------
+
+# --------------------------------------------------
+# APPS
+# --------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -28,11 +42,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "detection",       # your app
-    # "rest_framework",  # only if you actually use DRF
+    "detection",   # your app
+    # "rest_framework",  # enable only if used
 ]
 
-# ------------------ MIDDLEWARE ------------------
+
+# --------------------------------------------------
+# MIDDLEWARE
+# --------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -43,17 +60,23 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
+# --------------------------------------------------
+# URL & APPLICATION
+# --------------------------------------------------
 ROOT_URLCONF = "core.urls"
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"
 
-# ------------------ TEMPLATES ------------------
+
+# --------------------------------------------------
+# TEMPLATES
+# --------------------------------------------------
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # global templates folder (for dashboard.html etc.)
-        "DIRS": [BASE_DIR / "templates"],
-        "APP_DIRS": True,  # also loads detection/templates/
+        "DIRS": [BASE_DIR / "templates"],   # global templates folder
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -65,7 +88,10 @@ TEMPLATES = [
     },
 ]
 
-# ------------------ DATABASE (SQLite) ------------------
+
+# --------------------------------------------------
+# DATABASE (SQLite)
+# --------------------------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -73,12 +99,18 @@ DATABASES = {
     }
 }
 
-# ------------------ MONGODB (optional, for logs) ------------------
+
+# --------------------------------------------------
+# OPTIONAL MONGODB CONFIG
+# --------------------------------------------------
 MONGODB_URI = os.environ.get("MONGODB_URI", "mongodb://localhost:27017")
 MONGODB_DB_NAME = os.environ.get("MONGODB_DB_NAME", "wildlife_db")
 MONGODB_COLLECTION = os.environ.get("MONGODB_COLLECTION", "detections")
 
-# ------------------ PASSWORDS ------------------
+
+# --------------------------------------------------
+# PASSWORD VALIDATION
+# --------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -86,13 +118,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------ I18N ------------------
+
+# --------------------------------------------------
+# INTERNATIONALIZATION
+# --------------------------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 USE_TZ = True
 
-# ------------------ STATIC & MEDIA ------------------
+
+# --------------------------------------------------
+# STATIC & MEDIA FILES
+# --------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -103,8 +141,16 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# --------------------------------------------------
+# AUTH SETTINGS
+# --------------------------------------------------
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
+
+
+# --------------------------------------------------
+# DEFAULT PRIMARY KEY FIELD
+# --------------------------------------------------
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
